@@ -8,6 +8,9 @@ function App() {
 
   return (
     <>
+      <div id='Container'>
+        <h2>Secret word</h2>
+      </div>
     </>
   )
 }
