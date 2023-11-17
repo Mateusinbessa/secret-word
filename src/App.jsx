@@ -28,6 +28,11 @@ function App() {
   const [pickedCategory, setPickedCategory] = useState("")
   const [letters, setLetters] = useState([]) // array pq é uma lista de letras
 
+  const [guessedLetters, setGuessedLetters] = useState([])
+  const [wrongLetters, setWrongLetters] = useState([])
+  const [guesses, setGuesses] = useState(3)
+  const [score, setScore] = useState(0)
+
   const pickWordAndCategory = () => {
     //Object.keys --> Tá pegando todas as chaves de busca do meu array "words"
     const categories = Object.keys(words)
@@ -68,7 +73,15 @@ const retry = () => {
     <>
       <div id='Container'>
         {gameStage === 'start' && <StartScreen startGame={startGame} />}
-        {gameStage === 'game' && <Game verifyLetter={verifyLetter} />}
+        {gameStage === 'game' &&
+         <Game verifyLetter={verifyLetter}
+               pickedWord={pickedWord} 
+               pickedCategory={pickedCategory} 
+               letters={letters}
+               wrongLetters={wrongLetters}
+               guessedLetters={guessedLetters}
+               guesses={guesses}
+               score={score} />}
         {gameStage === 'end' && <GameOver retry={retry} />}
       </div>
     </>
