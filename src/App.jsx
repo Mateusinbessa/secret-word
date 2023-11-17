@@ -32,7 +32,6 @@ function App() {
     //Object.keys --> Tá pegando todas as chaves de busca do meu array "words"
     const categories = Object.keys(words)
     const category = categories[Math.floor(Math.random() * Object.keys(categories).length)]
-    
     const word = words[category][Math.floor(Math.random() * words[category].length)]
 
     return { word, category }
