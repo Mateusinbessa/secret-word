@@ -33,9 +33,9 @@ function App() {
   const [guessedLetters, setGuessedLetters] = useState([])
   const [wrongLetters, setWrongLetters] = useState([])
   const [guesses, setGuesses] = useState(guessesQty)
-  const [score, setScore] = useState(50)
+  const [score, setScore] = useState(0)
 
-  const pickWordAndCategory = () => {
+  const pickWordAndCategory = useCallback(() => {
     //Object.keys --> Tá pegando todas as chaves de busca do meu array "words"
     const categories = Object.keys(words)
     const category = categories[Math.floor(Math.random() * Object.keys(categories).length)]
@@ -43,11 +43,15 @@ function App() {
 
     return { word, category }
 
-  }
+  }, [words])
 //start the secret-word game
-  const startGame = () => {
+  const startGame = useCallback(() => {
+    //clear all letters
+    clearLetterStates()
+
     //pick word and pick category
     const { word, category } = pickWordAndCategory()
+    console.log(word)
 
     //create an array of letters
     let wordLetters = word.split("")
@@ -59,7 +63,7 @@ function App() {
     setLetters(wordLetters)
 
     setGameStage(stages[1].name)
-  }
+  }, [pickWordAndCategory])
 
 //process the letter input
 const verifyLetter = (letter) => {
@@ -90,7 +94,8 @@ const clearLetterStates = () => {
   setGuessedLetters([])
   setWrongLetters([])
 }
-//Esse HOOK pode monitorar algum dado! Como 2 argumento eu passo o dado que eu quero monitorar
+
+//Check if guesses ended
 useEffect(() => {
   if(guesses <= 0) {
     //reset all states
@@ -99,12 +104,27 @@ useEffect(() => {
   }
 }, [guesses])
 
+//check win condition
+useEffect(() => {
+  const uniqueLetters = [... new Set(letters)]
+
+  //win condition
+  if(gameStage === 'game' && guessedLetters.length === uniqueLetters.length) {
+    //add score
+    setScore((actualScore) => actualScore += 100)
+
+    //restart the game with a new word
+    startGame()
+  }
+}, [guessedLetters, letters, startGame]) // Uma função não pode ser dependência de useEffect! Vamos resolver isso com o useCallBack
 //restarts the game
 const retry = () => {
   setScore(0)
   setGuesses(guessesQty)
   setGameStage(stages[0].name)
 }
+
+
 
   return (
     <>
