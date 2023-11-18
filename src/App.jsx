@@ -19,6 +19,8 @@ const stages = [
   {id: 3, name: "end"},
 ]
 
+const guessesQty = 3
+
 function App() {
   const [count, setCount] = useState(0)
   const [gameStage, setGameStage] = useState(stages[0].name)
@@ -26,11 +28,11 @@ function App() {
 
   const [pickedWord, setPickedWord] = useState("")
   const [pickedCategory, setPickedCategory] = useState("")
-  const [letters, setLetters] = useState([]) // array pq é uma lista de letras
+  const [letters, setLetters] = useState([]) 
 
   const [guessedLetters, setGuessedLetters] = useState([])
   const [wrongLetters, setWrongLetters] = useState([])
-  const [guesses, setGuesses] = useState(3)
+  const [guesses, setGuesses] = useState(guessesQty)
   const [score, setScore] = useState(0)
 
   const pickWordAndCategory = () => {
@@ -77,12 +79,30 @@ const verifyLetter = (letter) => {
     setWrongLetters((actualWrongLetters) => [
       ...actualWrongLetters, normalizedLetter
     ])
+
+    //actualGuesses representa o valor atual do estado 'guesses'
+    setGuesses((actualGuesses) => actualGuesses - 1)
   }
 
 }
 
+const clearLetterStates = () => {
+  setGuessedLetters([])
+  setWrongLetters([])
+}
+//Esse HOOK pode monitorar algum dado! Como 2 argumento eu passo o dado que eu quero monitorar
+useEffect(() => {
+  if(guesses <= 0) {
+    //reset all states
+    clearLetterStates()
+    setGameStage(stages[2].name)
+  }
+}, [guesses])
+
 //restarts the game
 const retry = () => {
+  setScore(0)
+  setGuesses(guessesQty)
   setGameStage(stages[0].name)
 }
 
