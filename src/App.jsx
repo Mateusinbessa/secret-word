@@ -51,7 +51,6 @@ function App() {
 
     //pick word and pick category
     const { word, category } = pickWordAndCategory()
-    console.log(word)
 
     //create an array of letters
     let wordLetters = word.split("")
